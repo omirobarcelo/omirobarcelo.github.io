@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
+  <title>Alpine Tic-Tac-Toe</title>
+
+  <script>
+    function state() {
+      const circle = `
+      <svg width="200" height="200">
+        <circle stroke="black" stroke-width="10" fill="none" cx="100" cy="100" r="70" />
+      </svg>`;
+      const cross = `
+      <svg height="200" width="200">
+        <path d="M30 30 L170 170 M30 170 L170 30" stroke="black" stroke-width="10" stroke-linecap="round" fill="none" />
+      </svg> `;
+
+      const EMPTY = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null]
+      ];
+
+      return {
+        finished: false,
+        gameOverMsg: '',
+        board: JSON.parse(JSON.stringify(EMPTY)),
+        getCells() {
+          // flatten
+          return this.board.reduce((acc, curr) => acc.concat(curr), []);
+        },
+        getCell(idx) {
+          return this.board[~~(idx / 3)][idx % 3];
+        },
+        setCell(idx, val) {
+          this.board[~~(idx / 3)][idx % 3] = val;
+        },
+        cellIsFree(idx) {
+          return this.getCell(idx) === null;
+        },
+        isGameOver() {
+          // Rows
+          for (let row = 0; row < 3; row++) {
+            if (this.board[row][0] === this.board[row][1] && this.board[row][0] === this.board[row][2] && this.board[row][0] !== null) {
+              return true;
+            }
+          }
+          // Columns
+          for (let col = 0; col < 3; col++) {
+            if (this.board[0][col] === this.board[1][col] && this.board[0][col] === this.board[2][col] && this.board[0][col] !== null) {
+              return true;
+            }
+          }
+          // Diagonals
+          if (this.board[0][0] === this.board[1][1] && this.board[0][0] === this.board[2][2] && this.board[0][0] !== null) {
+            return true;
+          }
+          if (this.board[0][2] === this.board[1][1] && this.board[0][2] === this.board[2][0] && this.board[0][2] !== null) {
+            return true;
+          }
+
+          return false;
+        },
+        pick(idx) {
+          if (!this.finished && this.cellIsFree(idx)) {
+            // Player pick
+            this.setCell(idx, cross);
+            // Does player win?
+            if (this.isGameOver()) {
+              this.finished = true;
+              this.gameOverMsg = 'YOU WIN!';
+            } else {
+              // Computer pick
+              this.computerPick();
+              // Does computer win?
+              if (this.isGameOver()) {
+                this.finished = true;
+                this.gameOverMsg = 'YOU LOSE!';
+              }
+            }
+          }
+        },
+        computerPick(strategy = 'random') {
+          switch (strategy) {
+            case 'random':
+            default: {
+              const choices = [];
+              this.getCells().forEach((c, i) => {
+                if (this.cellIsFree(i)) {
+                  choices.push(i);
+                }
+              });
+              const choiceIdx = Math.floor(Math.random() * choices.length);
+              this.setCell(choices[choiceIdx], circle);
+              break;
+            }
+          }
+        },
+        reset() {
+          this.finished = false;
+          this.gameOverMsg = '';
+          this.board = JSON.parse(JSON.stringify(EMPTY));
+        }
+      }
+    }
+
+  </script>
+
+  <style media="screen">
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bg-neon-pink {
+      background-color: #eb2f96;
+    }
+
+    .game-over {
+      height: 100px;
+      color: white;
+      font-size: 68px;
+      font-weight: bolder;
+    }
+
+    .board {
+      width: 600px;
+      height: 600px;
+    }
+
+    .restart-btn {
+      width: 25%;
+      margin: 1% 0;
+      background-color: transparent;
+      border: 2px solid #eb2f96;
+      font-size: x-large;
+      color: white;
+      font-weight: bold;
+    }
+
+    .restart-btn:hover {
+      background-color: #eb2f96;
+      color: black;
+    }
+
+    .restart-btn:focus {
+      outline: none;
+    }
+
+    .restart-btn:active {
+      background-color: #f759ab;
+    }
+
+    .cell {
+      height: 200px;
+      border: 2px solid black;
+    }
+
+    .cell:hover {
+      cursor: pointer;
+      background-color: #f759ab;
+    }
+
+  </style>
+</head>
+
+<body class="bg-black flex flex-col justify-center items-center" x-data="state()">
+  <div class="game-over" x-text="gameOverMsg"></div>
+  <div id="game" class="bg-neon-pink board grid grid-cols-3">
+    <template x-for="(c, i) in getCells()" :key="i">
+      <div class="cell" x-html="c" @click="pick(i)"></div>
+    </template>
+  </div>
+  <button type="button" class="restart-btn" @click="reset()">RESTART</button>
+</body>
+
+</html>

@@ -7,3 +7,6 @@ The NPM library [svelte-html5-validators](https://www.npmjs.com/package/svelte-h
 
 ### JSON-LD SPARQL Generator
 Simple SPARQL insert generator converting mass and temperature data into [JSON-LD](https://github.com/digitalbazaar/jsonld.js) for OBI ([Ontology for Biomedical Investigations](https://github.com/obi-ontology/obi)).
+
+### AlpineJS Tic-Tac-Toe
+Simple Tic-Tac-Toe game made using AlpineJS and Tailwind CSS.
