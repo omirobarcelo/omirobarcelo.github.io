@@ -1,0 +1,1 @@
+import{m as r,C as s}from"./index-DWk_Uv7a.js";const t=new s,e=r({loading:!0,cookbookEntry:void 0,async load(o){this.loading=!0;const i=await t.getCookbookEntry(o);this.cookbookEntry=i,this.loading=!1},async addVersion(o){this.cookbookEntry!=null&&(await t.addVersion(this.cookbookEntry.id,o),this.reset())},reset(){this.loading=!0,this.cookbookEntry=void 0}});export{e as c};
