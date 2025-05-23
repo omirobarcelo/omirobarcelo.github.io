@@ -19,6 +19,10 @@ Simple SPARQL insert generator converting mass and temperature data into [JSON-L
 
 Simple Tic-Tac-Toe game made using AlpineJS and Tailwind CSS.
 
+### AlpineJS Choose Your Own Adventure
+
+A Choose Your Own Adventure web app done using AlpineJS.
+
 ### Quarto Online
 
 Play [Quarto](https://en.gigamic.com/game/quarto-classic) online. Made with Svelte, communication via a simple Node.js WebSocket server.  

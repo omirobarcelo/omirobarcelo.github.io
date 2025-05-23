@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Own Adventure JS</title>
+    <link rel="stylesheet" href="index.css" />
+    <!-- Alpine.js -->
+    <script
+      defer
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <!-- TypewriterJS -->
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+  </head>
+  <body>
+    <div x-data="adventure" class="container">
+      <h1 x-text="story.title" class="title"></h1>
+
+      <div id="typewriter" class="story-text"></div>
+
+      <div class="options" x-show="!isTyping">
+        <template x-for="option in currentPage.options" :key="option.text">
+          <button
+            @click="makeChoice(option.goTo)"
+            class="option-button"
+            x-text="option.text"
+          ></button>
+        </template>
+      </div>
+    </div>
+
+    <script src="story.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
