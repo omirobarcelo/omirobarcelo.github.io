@@ -6,19 +6,70 @@ const story = {
       options: [{ text: "Start Chapter 0", goTo: "start" }],
     },
     start: {
-      text: 'It started like any other Tuesday.\n\nOriol, the first to log in as usual (timezone advantage), materialized in Gather, stretching in his chair and sipping from a steaming mug. He dragged his avatar into the \'Lighthouse Standup Room\' and waved as Slack notifications trickled in.\n\nAks was next. Her pixel self darted around Gather before settling next to Oriol\'s. "Morning! DataDog\'s acting weird again. Got a few drops on the Prague client."\n\nOriol frowned. "Hotel Astrála?"\n\n"Yeah. And it\'s not just ingestion. The events have weird timestamps. One came in at 23:61."\n\nHelen finally wandered into Gather five minutes later, hair still damp from her morning run. "Sorry! Kid tantrum. What\'s the chaos today?"\n\n"Haunted checkouts, apparently," Oriol replied.\n\nThey gathered around a shared tab. The Hotel Astrála data showed duplicated checkouts with impossible times. Metadata was coming through, but the script version wasn’t matching any known deploy.\n\nAks squinted. "Check this out... x-tease-protocol: lighthouse-alpha. What the hell is that?"\n\nOriol searched GitHub. Nothing.\n\nHelen searched BigQuery logs. Still nothing.\n\nAks searched her local files. "I’m going full Splendor loser mode if this is another ghost CDN bug."\n\nOriol laughed. "You\'re undefeated at losing."\n\nThen Slack pinged. A message from Lewis.\n\n"Hey, just peeking in from leave. Saw your thread. I think I\'ve seen \'lighthouse-alpha\' before.\nOld repo. I cloned it months ago. Will check my backups."\n\nAks paused. "I’m going to Prague."\n\nHelen blinked. "You what?"\n\n"If this is real traffic, we need to see what\'s triggering it. It\'s not just a bug."\n\nOriol nodded slowly. "We pair up every day to squash bugs, but this... this might be a story."\n\nAt 9:29 a.m., they stood their avatars up for the standup. Aks, camera on, said nothing about her travel plans.\n\nAt 9:31 a.m., the event stream from Hotel Astrála stopped.\n\nAt 9:32 a.m., a new internal event appeared:\n\nprotocol_entry_point: the bell tower\n\nWhat will the team do next?',
+      text: 'It\'s 9:28 AM UK time. The pixelated avatars of Lighthouse Squad begin to pop into the virtual space of Gather.\n\nOriol, freshly caffeinated and already debugging in his corner of the Spanish island, waves at the others as he drags his avatar into the Standup Room.\n\nAks appears next, briskly moving toward the meeting room, talking to herself: \'Why is our slipway sync five minutes behind today... again?\'\n\nLewis arrives moments later, yawning audibly on camera. "Cooper barked at a floating bag at 4 AM. Again. Also, the baby decided sleep was optional. Morning."\n\nHelen arrives at exactly 9:31, slightly flushed from a quick jog. "Hiya! Sorry, tantrum and porridge explosion. What did I miss?"\n\n"Everything and nothing," Oriol grins. "Just another ordinary day in meta-script wonderland."\n\nBut then Aks frowns. "Not quite. Check this out. Hotel Astrála is sending duplicated checkouts with timestamps that don’t make sense. Look. 24:01."\n\nHelen squints. "That’s not even... legal."\n\nLewis rubs his eyes. "Wait. Didn’t someone from Platform mention seeing weird traffic during the Madrid retreat?"\n\n"Maybe. I was too distracted eating tapas," Oriol mutters.\n\n"You mean gorging," Aks smirks.\n\nThe log entries contain a curious header: `x-tease-protocol: lighthouse-alpha`. None of them had seen it before. A search through GitHub, DataDog, and BigQuery yields nothing.\n\nThen Oriol spots a commit in an old, archived repository labeled `lighthouse-protocol`. It has no author, no timestamp. Just a comment: \'Do not deploy without tower clearance.\'\n\nAt 9:34, the Squad stands silent. Helen\'s avatar twitches awkwardly. \n\nThen, another event appears in their dashboard:\n\n**protocol_entry_point: the bell tower**\n\nThe screen flickers for everyone at the same time.\n\nAks breaks the silence. "Alright. We’re either in a conspiracy... or a bug report no one\'s brave enough to log."\n\nWhat should the Lighthouse Squad do next?',
       options: [
-        { text: "Have Oriol dig into the old repo", goTo: "dig_repo" },
-        { text: "Follow Aks on her trip to Prague", goTo: "follow_aks" },
+        {
+          text: "Have Oriol dig deeper into the mysterious archived repo",
+          goTo: "dig_repo",
+        },
+        { text: "Send Aks to check Hotel Astrála in person", goTo: "aks_trip" },
+        {
+          text: "Have Lewis deploy the protocol branch in a test environment",
+          goTo: "lewis_test",
+        },
       ],
     },
     dig_repo: {
-      text: "Oriol connects his old backup drive and finds a strange folder labeled simply 'proto'. Inside: a single README, an obfuscated script, and a license from 1998.\n\nThe README ends with one line:\n\"If you’ve found this, the Tower has chosen you.\"\n\nHis screen flickers. The lights in his flat blink twice.\n\nSomething has activated.",
-      options: [{ text: "Start Over", goTo: "title" }],
+      text: "Oriol opens the repo. Most files are unreadable—encrypted or corrupted. One README remains.\n\nIt ends with a sentence: 'When the tower rings, the loop begins.'\n\nHis terminal freezes for a second. Then, without input, it prints: `INVOKE PROTOCOL: [Y/N]`\n\nBefore Oriol can respond, a Slack message pings from Aks: 'I'm seeing increased error rates on Prague since 5 minutes ago. Can someone test this safely?'",
+      options: [
+        {
+          text: "Ask Lewis to deploy the protocol in a test environment",
+          goTo: "lewis_test",
+        },
+        {
+          text: "Ping Aks to get on a call and pair-debug the protocol",
+          goTo: "aks_pair",
+        },
+      ],
     },
-    follow_aks: {
-      text: 'Aks arrives in Prague under leaden skies. The Hotel Astrála looms like a painting from another time.\n\nThe receptionist glances at her Triptease badge and silently hands her a room key. "You\'re the third one this month," she says.\n\nInside Room 404 lies a single envelope labeled "Lighthouse".\n\nInside it: a photograph of the squad. Taken from a high window. Their Gather avatars on screen. Timestamp: two weeks from now.\n\nThere is a shadow behind them that none of them remember.\n\nTo be continued...',
-      options: [{ text: "Start Over", goTo: "title" }],
+    aks_trip: {
+      text: 'Aks arrives in Prague. The receptionist at Hotel Astrála stares at her badge. Without a word, she slides over a dusty envelope labeled "Lighthouse".\n\nInside: a photo of the squad, taken from behind—but from above, as if shot from a height. Helen isn’t in it.\n\nBecause she hadn’t attended the retreat.\n\nThe timestamp says: *One week from today.*\n\nAks sends a photo of the envelope to the group. "We might be looking at a predictive script. Maybe the protocol is doing something with timestamps."\n\nHelen replies: \'We need a sandbox. Someone test this safely.\'',
+      options: [
+        {
+          text: "Ask Lewis to spin up the test environment",
+          goTo: "lewis_test",
+        },
+        {
+          text: "Ask Oriol to investigate the repo with Helen",
+          goTo: "dig_repo",
+        },
+      ],
+    },
+    lewis_test: {
+      text: "Lewis spins up a test container and deploys the protocol branch. Nothing happens at first.\n\nThen the fan on his laptop whirs to life.\n\n\"Weird... CPU spike without load?\"\n\nA whisper crackles through his speakers. Just barely audible: 'They opened the loop.'\n\nHis dog Cooper growls and hides under the desk.\n\nSlack lights up. Aks: 'I'm seeing phantom events on Slipway. Room bookings from future dates.'\n\nOriol: 'The repo timestamp just updated... by itself.'",
+      options: [
+        {
+          text: "Oriol and Helen investigate the repo's new changes",
+          goTo: "dig_repo",
+        },
+        {
+          text: "Aks decides to run protocol events live on Hotel Astrála",
+          goTo: "aks_trip",
+        },
+      ],
+    },
+    aks_pair: {
+      text: "Aks and Oriol hop on a quick call. Together, they trace the structure of the repo. Hidden inside a base64 string is a map. Not of code.\n\nOf a building.\n\nHelen gasps on Slack as she sees the screenshot. 'That’s the layout of the hotel tower.'\n\nThe repo isn’t code. It’s a blueprint.\n\nAnd something in it... is still running.",
+      options: [
+        {
+          text: "Lewis tries to cross-reference hotel layout with the protocol output",
+          goTo: "lewis_test",
+        },
+        {
+          text: "Helen starts logging timeline discrepancies in BigQuery",
+          goTo: "dig_repo",
+        },
+      ],
     },
   },
 };
