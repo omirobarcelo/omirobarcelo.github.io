@@ -307,11 +307,13 @@
       }
 
       const firstMixedIdx = pairs.findIndex(([a, b]) => a !== b);
+      const firstDoubleTailsIdx = pairs.findIndex(([a, b]) => !a && !b);
+      const skipFirstMixed = firstMixedIdx !== -1 &&
+        (firstDoubleTailsIdx === -1 || firstDoubleTailsIdx > firstMixedIdx);
       let heads = 0;
 
       pairs.forEach(([a, b], idx) => {
-        const isMixed = a !== b;
-        const skipped = isMixed && idx === firstMixedIdx;
+        const skipped = skipFirstMixed && idx === firstMixedIdx;
         const pairHasHeads = a || b;
         if (pairHasHeads && !skipped) heads++;
 
