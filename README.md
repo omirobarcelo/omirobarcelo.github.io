@@ -33,4 +33,8 @@ Play [Quarto](https://en.gigamic.com/game/quarto-classic) online. Made with Svel
 Play [Quarto](https://en.gigamic.com/game/quarto-classic) _offline_, AKA sharing the same screen. Made with Svelte.  
 [How to play](https://www.youtube.com/watch?v=v1c-uKD6iOw).
 
+### Za Warudo
+
+Poker deck card counter and draw-odds calculator. Mobile-first PWA with two tabs: one to record drawn cards (A, 2–10, J, Q, K, Joker), another to display the probability of the next card being a given value or equal-or-lower. Card values: Ace = 1, face cards = 10, joker = 11. State persists in localStorage.
+
 TODO add others

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Za Warudo</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<link rel="apple-touch-icon" href="./icon.svg">
+<meta name="theme-color" content="#141420">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Za Warudo">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #141420;
+    --panel: #1f1f2e;
+    --panel-2: #2a2a3d;
+    --border: #38384d;
+    --text: #f0f0f5;
+    --muted: #9a9ab0;
+    --accent: #c9a86a;
+    --accent-dim: #8a7448;
+    --danger: #d97070;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 14px 16px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .summary {
+    padding: 12px 16px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .summary .big {
+    color: var(--accent);
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px 24px;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rank {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .rank.exhausted {
+    opacity: 0.5;
+  }
+
+  .rank-label {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  .rank-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .rank-meta .count {
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .rank-meta .count .max {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 6px;
+  }
+
+  .btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 700;
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .btn:active:not(:disabled) { transform: scale(0.92); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .btn.plus {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .reset {
+    flex: 1;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .reset:active { transform: scale(0.98); }
+
+  table.odds {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+
+  table.odds th, table.odds td {
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.odds th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+  }
+
+  table.odds td.val {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  table.odds tr.zero td { color: var(--muted); opacity: 0.55; }
+
+  .pct { font-weight: 700; font-size: 15px; }
+  .frac { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 400; }
+
+  .empty-msg {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>ZA&nbsp;WARUDO</h1>
+    <div class="tabs">
+      <button class="tab active" data-view="deck">Deck</button>
+      <button class="tab" data-view="odds">Odds</button>
+    </div>
+  </header>
+
+  <div class="summary">
+    <span><span id="remaining" class="big">54</span> / 54 remain</span>
+    <span><span id="drawn">0</span> drawn</span>
+  </div>
+
+  <main>
+    <section id="view-deck" class="view active">
+      <div id="rank-list" class="rank-list"></div>
+      <div class="actions">
+        <button id="reset" class="reset">Reset deck</button>
+      </div>
+    </section>
+
+    <section id="view-odds" class="view">
+      <table class="odds">
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th>Left</th>
+            <th>Exact</th>
+            <th>Eq. or lower</th>
+          </tr>
+        </thead>
+        <tbody id="odds-body"></tbody>
+      </table>
+      <div id="odds-empty" class="empty-msg" style="display:none">Deck empty. Reset to compute odds.</div>
+    </section>
+  </main>
+
+<script>
+  const RANKS = [
+    { id: 'A',  label: 'A',  value: 1,  max: 4  },
+    { id: '2',  label: '2',  value: 2,  max: 4  },
+    { id: '3',  label: '3',  value: 3,  max: 4  },
+    { id: '4',  label: '4',  value: 4,  max: 4  },
+    { id: '5',  label: '5',  value: 5,  max: 4  },
+    { id: '6',  label: '6',  value: 6,  max: 4  },
+    { id: '7',  label: '7',  value: 7,  max: 4  },
+    { id: '8',  label: '8',  value: 8,  max: 4  },
+    { id: '9',  label: '9',  value: 9,  max: 4  },
+    { id: '10', label: '10', value: 10, max: 4  },
+    { id: 'J',  label: 'J',  value: 10, max: 4  },
+    { id: 'Q',  label: 'Q',  value: 10, max: 4  },
+    { id: 'K',  label: 'K',  value: 10, max: 4  },
+    { id: 'Jkr',label: 'Jkr',value: 11, max: 2  }
+  ];
+
+  const DECK_TOTAL = RANKS.reduce((s, r) => s + r.max, 0);
+  const STORAGE_KEY = 'za-waruda-counts-v1';
+
+  let counts = loadCounts();
+
+  function loadCounts() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return freshCounts();
+      const parsed = JSON.parse(raw);
+      const out = freshCounts();
+      for (const r of RANKS) {
+        const v = parsed[r.id];
+        if (typeof v === 'number' && v >= 0 && v <= r.max) out[r.id] = v;
+      }
+      return out;
+    } catch {
+      return freshCounts();
+    }
+  }
+
+  function freshCounts() {
+    const c = {};
+    for (const r of RANKS) c[r.id] = 0;
+    return c;
+  }
+
+  function saveCounts() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(counts)); } catch {}
+  }
+
+  function drawnTotal() {
+    return RANKS.reduce((s, r) => s + counts[r.id], 0);
+  }
+
+  function remainingByValue() {
+    const rem = {};
+    for (let v = 1; v <= 11; v++) rem[v] = 0;
+    for (const r of RANKS) rem[r.value] += (r.max - counts[r.id]);
+    return rem;
+  }
+
+  function fmtPct(p) {
+    if (!isFinite(p)) return '—';
+    return (p * 100).toFixed(1) + '%';
+  }
+
+  function renderSummary() {
+    const drawn = drawnTotal();
+    document.getElementById('drawn').textContent = drawn;
+    document.getElementById('remaining').textContent = DECK_TOTAL - drawn;
+  }
+
+  function renderDeck() {
+    const list = document.getElementById('rank-list');
+    list.replaceChildren();
+    for (const r of RANKS) {
+      const c = counts[r.id];
+      const row = document.createElement('div');
+      row.className = 'rank' + (c >= r.max ? ' exhausted' : '');
+
+      const lbl = document.createElement('div');
+      lbl.className = 'rank-label';
+      lbl.textContent = r.label;
+
+      const meta = document.createElement('div');
+      meta.className = 'rank-meta';
+      const countEl = document.createElement('span');
+      countEl.className = 'count';
+      const maxEl = document.createElement('span');
+      maxEl.className = 'max';
+      maxEl.textContent = ' / ' + r.max;
+      countEl.appendChild(document.createTextNode(String(c)));
+      countEl.appendChild(maxEl);
+      const valEl = document.createElement('span');
+      valEl.textContent = 'value ' + r.value;
+      meta.appendChild(countEl);
+      meta.appendChild(valEl);
+
+      const btns = document.createElement('div');
+      btns.className = 'btn-group';
+      const minus = document.createElement('button');
+      minus.className = 'btn minus';
+      minus.textContent = '−';
+      minus.disabled = c <= 0;
+      minus.setAttribute('aria-label', 'Remove one ' + r.label);
+      minus.addEventListener('click', () => adjust(r.id, -1));
+      const plus = document.createElement('button');
+      plus.className = 'btn plus';
+      plus.textContent = '+';
+      plus.disabled = c >= r.max;
+      plus.setAttribute('aria-label', 'Add one ' + r.label);
+      plus.addEventListener('click', () => adjust(r.id, +1));
+      btns.appendChild(minus);
+      btns.appendChild(plus);
+
+      row.appendChild(lbl);
+      row.appendChild(meta);
+      row.appendChild(btns);
+      list.appendChild(row);
+    }
+  }
+
+  function renderOdds() {
+    const body = document.getElementById('odds-body');
+    const empty = document.getElementById('odds-empty');
+    body.replaceChildren();
+
+    const rem = remainingByValue();
+    const total = DECK_TOTAL - drawnTotal();
+
+    if (total <= 0) {
+      body.parentElement.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+    body.parentElement.style.display = '';
+    empty.style.display = 'none';
+
+    let cumulative = 0;
+    for (let v = 1; v <= 11; v++) {
+      const left = rem[v];
+      cumulative += left;
+      const pExact = left / total;
+      const pCum = cumulative / total;
+
+      const tr = document.createElement('tr');
+      if (left === 0) tr.className = 'zero';
+
+      const tdV = document.createElement('td');
+      tdV.className = 'val';
+      tdV.textContent = v;
+
+      const tdLeft = document.createElement('td');
+      tdLeft.textContent = left;
+
+      const tdP = document.createElement('td');
+      const pctP = document.createElement('span');
+      pctP.className = 'pct';
+      pctP.textContent = fmtPct(pExact);
+      const fracP = document.createElement('span');
+      fracP.className = 'frac';
+      fracP.textContent = left + '/' + total;
+      tdP.appendChild(pctP);
+      tdP.appendChild(fracP);
+
+      const tdC = document.createElement('td');
+      const pctC = document.createElement('span');
+      pctC.className = 'pct';
+      pctC.textContent = fmtPct(pCum);
+      const fracC = document.createElement('span');
+      fracC.className = 'frac';
+      fracC.textContent = cumulative + '/' + total;
+      tdC.appendChild(pctC);
+      tdC.appendChild(fracC);
+
+      tr.appendChild(tdV);
+      tr.appendChild(tdLeft);
+      tr.appendChild(tdP);
+      tr.appendChild(tdC);
+      body.appendChild(tr);
+    }
+  }
+
+  function renderAll() {
+    renderSummary();
+    renderDeck();
+    renderOdds();
+  }
+
+  function adjust(id, delta) {
+    const rank = RANKS.find((r) => r.id === id);
+    if (!rank) return;
+    const next = counts[id] + delta;
+    if (next < 0 || next > rank.max) return;
+    counts[id] = next;
+    saveCounts();
+    renderAll();
+  }
+
+  function resetDeck() {
+    counts = freshCounts();
+    saveCounts();
+    renderAll();
+  }
+
+  function switchView(name) {
+    for (const t of document.querySelectorAll('.tab')) {
+      t.classList.toggle('active', t.dataset.view === name);
+    }
+    for (const v of document.querySelectorAll('.view')) {
+      v.classList.toggle('active', v.id === 'view-' + name);
+    }
+  }
+
+  document.getElementById('reset').addEventListener('click', () => {
+    if (drawnTotal() === 0) return;
+    if (confirm('Reset deck to full 54 cards?')) resetDeck();
+  });
+
+  for (const t of document.querySelectorAll('.tab')) {
+    t.addEventListener('click', () => switchView(t.dataset.view));
+  }
+
+  renderAll();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
